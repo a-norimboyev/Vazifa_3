@@ -1,4 +1,4 @@
-﻿# Byte-compiled / optimized / DLL files
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *.class
@@ -42,7 +42,8 @@ db.sqlite3
 db.sqlite3-journal
 
 # Media uploads
-media/posts/
+media/*
+!media/.gitkeep
 
 # Static collected
 staticfiles/
