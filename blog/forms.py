@@ -5,12 +5,12 @@ from .models import Post, Comment, Category, Tag
 class PostForm(forms.ModelForm):
     new_tags = forms.CharField(
         required=False,
-        label="Yangi teglar (vergul bilan ajrating)",
+        label="Yangi teglar",
         widget=forms.TextInput(attrs={
             "class": "form-control",
             "placeholder": "masalan: texnologiya, yangiliklar, suniy_intellekt"
         }),
-        help_text="Mavjud teglardan tashqari yangi teglar yozishingiz mumkin"
+        help_text="Vergul bilan ajratib yozing. Mavjud teglardan tashqari yangi teglar qo'shishingiz mumkin"
     )
 
     class Meta:
