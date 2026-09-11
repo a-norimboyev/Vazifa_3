@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Mening Postlarim — BlogSphere{% endblock %}
+
+{% block content %}
+<div class="container py-2">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h3 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
+                <span class="sidebar-title-icon bg-primary bg-opacity-10 text-primary">
+                    <i class="bi bi-collection-play-fill"></i>
+                </span>
+                <span>Mening Maqolalarim</span>
+            </h3>
+            <p class="text-muted small mb-0">Siz tomoningizdan kiritilgan maqolalar va ularning tekshiruv holati</p>
+        </div>
+        <a href="{% url 'blog:post_create' %}" class="btn btn-gradient rounded-pill px-4 py-2 fw-semibold">
+            <i class="bi bi-plus-lg me-1"></i> Yangi post qo'shish
+        </a>
+    </div>
+
+    <div class="bg-white rounded-4 shadow-sm border p-4">
+        {% if posts %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-muted small">
+                        <tr>
+                            <th scope="col" style="min-width: 260px;">Maqola</th>
+                            <th scope="col">Bo'lim</th>
+                            <th scope="col">Holati (Status)</th>
+                            <th scope="col" class="text-center">Ko'rishlar</th>
+                            <th scope="col" class="text-center">Izohlar</th>
+                            <th scope="col">Sana</th>
+                            <th scope="col" class="text-end">Amal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in posts %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        {% if post.image %}
+                                            <img src="{{ post.image.url }}" class="rounded-3 shadow-sm" style="width: 50px; height: 50px; object-fit: cover;" alt="">
+                                        {% else %}
+                                            <div class="rounded-3 bg-light d-flex align-items-center justify-content-center text-muted border" style="width: 50px; height: 50px;">
+                                                <i class="bi bi-card-image"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <a href="{{ post.get_absolute_url }}" class="text-decoration-none text-dark fw-bold small d-block">
+                                                {{ post.title|truncatechars:42 }}
+                                            </a>
+                                            {% if post.is_recommended %}
+                                                <span class="badge bg-warning text-dark small" style="font-size: 0.65rem;">
+                                                    <i class="bi bi-stars"></i> Tavsiya
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-secondary border rounded-pill">{{ post.category.name|default:"-" }}</span>
+                                </td>
+                                <td>
+                                    {% if post.is_approved %}
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1.5 rounded-pill small fw-semibold">
+                                            <i class="bi bi-check-circle-fill me-1"></i> Saytda Faol
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-1.5 rounded-pill small fw-semibold">
+                                            <i class="bi bi-hourglass-split me-1"></i> Moderator tasdig'i kutilmoqda
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-secondary small fw-medium"><i class="bi bi-eye text-primary me-1"></i>{{ post.views_count }}</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-secondary small fw-medium"><i class="bi bi-chat-dots text-primary me-1"></i>{{ post.comments.count }}</span>
+                                </td>
+                                <td>
+                                    <span class="text-muted small">{{ post.created_at|date:"d-M-Y" }}</span>
+                                </td>
+                                <td class="text-end">
+                                    <a href="{{ post.get_absolute_url }}" class="btn btn-sm btn-light border rounded-pill px-3">
+                                        Ko'rish
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if posts.has_other_pages %}
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center gap-1 mb-0">
+                        {% if posts.has_previous %}
+                            <li class="page-item"><a class="page-link rounded-pill border px-3" href="?page={{ posts.previous_page_number }}">Oldingi</a></li>
+                        {% endif %}
+                        <li class="page-item active"><span class="page-link rounded-pill px-3">{{ posts.number }}</span></li>
+                        {% if posts.has_next %}
+                            <li class="page-item"><a class="page-link rounded-pill border px-3" href="?page={{ posts.next_page_number }}">Keyingi</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+
+        {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-pencil-square fs-1 text-muted opacity-50"></i>
+                <h5 class="fw-bold mt-3 text-secondary">Siz hali maqola yozmadingiz</h5>
+                <p class="text-muted small mb-3">Birinchi maqolangizni hoziroq e'lon qiling va auditoriyangizni to'plang!</p>
+                <a href="{% url 'blog:post_create' %}" class="btn btn-gradient rounded-pill px-4 py-2 fw-semibold">
+                    <i class="bi bi-plus-lg me-1"></i> Yangi post yaratish
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

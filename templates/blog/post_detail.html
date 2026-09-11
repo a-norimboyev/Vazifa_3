@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} — BlogSphere{% endblock %}
+
+{% block content %}
+<div class="container py-2">
+    <div class="row g-4">
+        <!-- Asosiy post kontenti -->
+        <div class="col-lg-8">
+            <article class="bg-white p-4 p-md-5 rounded-4 shadow-sm border mb-4">
+                
+                <!-- Tasdiqlanmaganlik ogohlantirishi -->
+                {% if not post.is_approved %}
+                    <div class="alert alert-warning d-flex align-items-center mb-4 rounded-4 border-0 shadow-sm p-3" role="alert">
+                        <i class="ri-time-line fs-3 me-3 text-warning"></i>
+                        <div>
+                            <strong class="d-block">Kutilmoqda (Admin tasdig'i):</strong>
+                            <span class="small">Ushbu post admin tomonidan tasdiqlanishi kutilmoqda. Hozircha faqat siz va administratorlarga ko'rinadi.</span>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Kategoriya va Tavsiya nishonlari -->
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                    {% if post.category %}
+                        <a href="{{ post.category.get_absolute_url }}" class="badge-cat">
+                            <i class="ri-folder-3-line"></i> {{ post.category.name }}
+                        </a>
+                    {% endif %}
+                    {% if post.is_recommended %}
+                        <span class="badge bg-warning text-dark px-3 py-1.5 rounded-pill fw-bold shadow-sm d-inline-flex align-items-center gap-1" style="font-size: 0.75rem;">
+                            <i class="ri-sparkling-fill text-danger"></i> Tavsiya etilgan
+                        </span>
+                    {% endif %}
+                </div>
+
+                <!-- Sarlavha -->
+                <h1 class="fw-bold mb-3 display-6 lh-sm text-dark">{{ post.title }}</h1>
+
+                <!-- Muallif va Meta ma'lumotlar -->
+                <div class="d-flex flex-wrap align-items-center justify-content-between text-muted small pb-4 mb-4 border-bottom gap-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="avatar-circle" style="width: 42px; height: 42px; font-size: 1.05rem;">
+                            {{ post.author.username|first }}
+                        </div>
+                        <div>
+                            <span class="fw-bold text-dark d-block">{{ post.author.username }}</span>
+                            <span class="text-muted" style="font-size: 0.8rem;"><i class="ri-calendar-line me-1"></i>{{ post.created_at|date:"d F Y, H:i" }}</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="badge bg-light text-secondary border px-2.5 py-1.5 rounded-pill d-inline-flex align-items-center gap-1" title="Ko'rishlar">
+                            <i class="ri-eye-line text-primary"></i>{{ post.views_count }} ko'rildi
+                        </span>
+                        <span class="badge bg-light text-secondary border px-2.5 py-1.5 rounded-pill d-inline-flex align-items-center gap-1" title="Izohlar">
+                            <i class="ri-chat-3-line text-primary"></i>{{ comments.count }} izoh
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Asosiy rasm -->
+                {% if post.image %}
+                    <div class="mb-4 rounded-4 overflow-hidden shadow-sm border">
+                        <img src="{{ post.image.url }}" class="img-fluid w-100" style="max-height: 480px; object-fit: cover;" alt="{{ post.title }}">
+                    </div>
+                {% endif %}
+
+                <!-- Post matni (Content) -->
+                <div class="post-content text-dark mb-4 text-break" style="white-space: pre-line; font-size: 1.125rem; line-height: 1.85;">
+                    {{ post.content }}
+                </div>
+
+                <!-- Teglar (Tags) -->
+                <div class="pt-4 border-top">
+                    <h6 class="fw-bold mb-2 text-dark small text-uppercase d-flex align-items-center gap-1">
+                        <i class="ri-price-tag-3-line text-primary"></i> Teglar:
+                    </h6>
+                    <div class="d-flex flex-wrap gap-1">
+                        {% for tag in post.tags.all %}
+                            <a href="{{ tag.get_absolute_url }}" class="badge-tag py-1.5 px-3">
+                                <i class="ri-hashtag text-primary"></i>{{ tag.name }}
+                            </a>
+                        {% empty %}
+                            <span class="text-muted small">Teglar biriktirilmagan</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </article>
+
+            <!-- Izohlar Bo'limi (Comments) -->
+            <section class="bg-white p-4 p-md-5 rounded-4 shadow-sm border mb-4">
+                <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
+                    <h4 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+                        <span class="icon-box icon-box-primary">
+                            <i class="ri-chat-voice-line fs-5"></i>
+                        </span>
+                        <span>Fikr va Izohlar ({{ comments.count }})</span>
+                    </h4>
+                </div>
+
+                <!-- Izoh yozish formasi -->
+                {% if user.is_authenticated %}
+                    <form method="POST" class="mb-5 bg-light p-3 p-md-4 rounded-4 border">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-dark d-flex align-items-center gap-2">
+                                <div class="avatar-circle" style="width: 24px; height: 24px; font-size: 0.7rem;">{{ user.username|first }}</div>
+                                <span>Fikringizni qoldiring:</span>
+                            </label>
+                            {{ comment_form.content }}
+                        </div>
+                        <button type="submit" class="btn btn-gradient btn-sm rounded-pill px-4 py-2 fw-semibold">
+                            <i class="ri-send-plane-fill"></i> Izohni chop etish
+                        </button>
+                    </form>
+                {% else %}
+                    <div class="p-4 rounded-4 bg-light border text-center mb-5">
+                        <div class="icon-box icon-box-primary mx-auto mb-2" style="width: 48px; height: 48px; font-size: 1.5rem; border-radius: 14px;">
+                            <i class="ri-chat-smile-3-line"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark mb-1">Muhokamada ishtirok eting</h6>
+                        <p class="text-muted small mb-3">Izoh qoldirish va muallif bilan fikr almashish uchun profilingizga kiring.</p>
+                        <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn btn-primary btn-sm rounded-pill px-4 me-2">
+                            <i class="ri-login-circle-line me-1"></i> Kirish
+                        </a>
+                        <a href="{% url 'accounts:register' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                            Ro'yxatdan o'tish
+                        </a>
+                    </div>
+                {% endif %}
+
+                <!-- Izohlar ro'yxati -->
+                <div class="d-flex flex-column gap-3">
+                    {% for comment in comments %}
+                        <div class="p-3 bg-light rounded-4 border">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-circle" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                        {{ comment.author.username|first }}
+                                    </div>
+                                    <span class="fw-bold text-dark small">{{ comment.author.username }}</span>
+                                </div>
+                                <span class="text-muted small d-inline-flex align-items-center gap-1" style="font-size: 0.75rem;">
+                                    <i class="ri-time-line"></i>{{ comment.created_at|date:"d-M-Y, H:i" }}
+                                </span>
+                            </div>
+                            <p class="mb-0 text-secondary ps-4 ms-2 small lh-base" style="white-space: pre-line;">{{ comment.content }}</p>
+                        </div>
+                    {% empty %}
+                        <div class="text-center py-4 text-muted">
+                            <i class="ri-chat-history-line fs-2 text-muted opacity-50 d-block mb-1"></i>
+                            <p class="mt-2 mb-0 small">Hozircha hech kim fikr bildirmagan. Birinchi bo'lib izoh yozing!</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Mavzuga oid postlar -->
+            {% if related_posts %}
+            <div class="mb-4">
+                <h5 class="fw-bold mb-3 text-dark d-flex align-items-center gap-2">
+                    <i class="ri-bookmark-3-fill text-primary"></i>
+                    <span>Mavzuga Oid Postlar</span>
+                </h5>
+                <div class="row g-3">
+                    {% for rel in related_posts %}
+                    <div class="col-md-4">
+                        <div class="card card-post h-100">
+                            {% if rel.image %}
+                                <div class="img-wrapper" style="height: 120px;">
+                                    <img src="{{ rel.image.url }}" alt="{{ rel.title }}" loading="lazy">
+                                </div>
+                            {% endif %}
+                            <div class="card-body p-3">
+                                <h6 class="fw-bold small mb-2 lh-sm">
+                                    <a href="{{ rel.get_absolute_url }}" class="text-decoration-none text-dark">
+                                        {{ rel.title|truncatechars:45 }}
+                                    </a>
+                                </h6>
+                                <div class="text-muted small d-flex justify-content-between" style="font-size: 0.75rem;">
+                                    <span><i class="ri-eye-line text-primary me-1"></i>{{ rel.views_count }}</span>
+                                    <span>{{ rel.created_at|date:"d-M" }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <!-- O'ng: Yon panel -->
+        <div class="col-lg-4">
+            {% include "blog/_sidebar.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

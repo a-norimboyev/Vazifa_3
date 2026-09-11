@@ -1,0 +1,73 @@
+<div class="col-md-6 mb-4">
+    <div class="card card-post h-100">
+        <div class="img-wrapper">
+            {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" loading="lazy">
+            {% else %}
+                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted bg-light">
+                    <i class="ri-image-line fs-1 opacity-25"></i>
+                </div>
+            {% endif %}
+            
+            <div class="position-absolute top-0 start-0 m-3 d-flex flex-wrap gap-1">
+                {% if post.is_recommended %}
+                    <span class="badge bg-warning text-dark px-2.5 py-1.5 shadow-sm fw-bold rounded-pill d-inline-flex align-items-center gap-1" style="font-size: 0.725rem;">
+                        <i class="ri-sparkling-fill text-danger"></i> Tavsiya
+                    </span>
+                {% endif %}
+            </div>
+
+            {% if post.category %}
+                <span class="position-absolute top-0 end-0 m-3 badge bg-white text-dark shadow-sm px-2.5 py-1.5 rounded-pill fw-semibold d-inline-flex align-items-center gap-1" style="font-size: 0.75rem;">
+                    <i class="ri-folder-3-line text-primary"></i> {{ post.category.name }}
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="card-body p-4 d-flex flex-column">
+            <h5 class="card-title fw-bold mb-2 lh-base">
+                <a href="{{ post.get_absolute_url }}" class="text-decoration-none text-dark text-break">
+                    {{ post.title }}
+                </a>
+            </h5>
+            
+            <p class="card-text text-muted small flex-grow-1 lh-base">
+                {{ post.content|striptags|truncatewords:20 }}
+            </p>
+
+            <div class="mb-3 d-flex flex-wrap gap-1">
+                {% for tag in post.tags.all %}
+                    <a href="{{ tag.get_absolute_url }}" class="badge-tag">
+                        <i class="ri-hashtag text-primary"></i>{{ tag.name }}
+                    </a>
+                {% endfor %}
+            </div>
+
+            <div class="border-top pt-3 mt-auto d-flex align-items-center justify-content-between text-muted small">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="avatar-circle" style="width: 28px; height: 28px; font-size: 0.75rem;">
+                        {{ post.author.username|first }}
+                    </div>
+                    <span class="fw-semibold text-dark">{{ post.author.username }}</span>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="d-inline-flex align-items-center gap-1" title="Ko'rishlar soni">
+                        <i class="ri-eye-line text-primary"></i>{{ post.views_count }}
+                    </span>
+                    <span class="d-inline-flex align-items-center gap-1" title="Izohlar soni">
+                        <i class="ri-chat-3-line text-primary"></i>{{ post.comments.count }}
+                    </span>
+                </div>
+            </div>
+            
+            <div class="text-muted small mt-2 d-flex justify-content-between align-items-center" style="font-size: 0.78rem;">
+                <span class="d-inline-flex align-items-center gap-1">
+                    <i class="ri-calendar-line text-secondary"></i>{{ post.created_at|date:"d F, Y" }}
+                </span>
+                <a href="{{ post.get_absolute_url }}" class="text-primary fw-semibold text-decoration-none d-inline-flex align-items-center gap-1">
+                    O'qish <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

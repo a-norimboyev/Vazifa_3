@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}#{{ tag.name }} Tegiga Oid Postlar - BlogSphere{% endblock %}
+{% block title %}#{{ tag.name }} Tegiga Oid Postlar — BlogSphere{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class="container py-2">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="bg-white p-3 p-md-4 rounded-4 shadow-sm mb-4">
+            <div class="bg-white p-4 rounded-4 shadow-sm border mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle">
+                        <i class="bi bi-tag-fill fs-3"></i>
+                    <div class="icon-box icon-box-emerald" style="width: 52px; height: 52px; font-size: 1.7rem; border-radius: 14px;">
+                        <i class="ri-price-tag-3-fill"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-1">#{{ tag.name }}</h4>
+                        <p class="text-muted small mb-0">Ushbu teg biriktirilgan barcha tasdiqlangan postlar</p>
+                        <h4 class="fw-bold mb-1 text-dark">#{{ tag.name }}</h4>
+                        <p class="text-muted small mb-0">Ushbu teg biriktirilgan barcha tasdiqlangan maqolalar ({{ posts.paginator.count }} ta)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                {% for post in posts %}
+                    {% include "blog/_post_card.html" with post=post %}
+                {% empty %}
+                    <div class="col-12">
+                        <div class="text-center py-5 bg-white rounded-4 shadow-sm">
+                            <i class="bi bi-tag fs-1 text-muted"></i>
+                            <h5 class="fw-bold mt-3">Bu tegda hali postlar yo'q</h5>
+                            <a href="{% url 'blog:home' %}" class="btn btn-outline-primary btn-sm rounded-pill mt-2">Bosh sahifaga qaytish</a>
+                        <div class="text-center py-5 bg-white rounded-4 shadow-sm border p-4">
+                            <i class="ri-inbox-line fs-1 text-muted opacity-50"></i>
+                            <h5 class="fw-bold mt-3 text-secondary">Bu tegda hali postlar yo'q</h5>
+                            <a href="{% url 'blog:home' %}" class="btn btn-outline-primary btn-sm rounded-pill mt-2 px-3">
+                                <i class="ri-arrow-left-line me-1"></i> Bosh sahifaga qaytish
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if posts.has_other_pages %}
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                    <ul class="pagination justify-content-center gap-1">
+                        {% if posts.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ posts.previous_page_number }}">Oldingi</a></li>
+                            <li class="page-item"><a class="page-link rounded-pill border px-3" href="?page={{ posts.previous_page_number }}"><i class="ri-arrow-left-s-line"></i> Oldingi</a></li>
+                        {% endif %}
+                        <li class="page-item active"><span class="page-link">{{ posts.number }}</span></li>
+                        <li class="page-item active"><span class="page-link rounded-pill px-3">{{ posts.number }}</span></li>
+                        {% if posts.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ posts.next_page_number }}">Keyingi</a></li>
+                            <li class="page-item"><a class="page-link rounded-pill border px-3" href="?page={{ posts.next_page_number }}">Keyingi <i class="ri-arrow-right-s-line"></i></a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-4">
+            {% include "blog/_sidebar.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

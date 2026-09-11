@@ -1,0 +1,530 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BlogSphere — Zamonaviy Blog Platformasi{% endblock %}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Remix Icon (Ultra-zamonaviy ikonka kutubxonasi) -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #8b5cf6 100%);
+            --fire-gradient: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+            --star-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --emerald-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --sky-gradient: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+            --card-hover-shadow: 0 20px 35px -8px rgba(79, 70, 229, 0.14), 0 10px 15px -5px rgba(0, 0, 0, 0.04);
+            --bg-body: #f8fafc;
+            --text-main: #0f172a;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            letter-spacing: -0.01em;
+        }
+
+        /* Glassmorphism Navbar */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.45rem;
+            letter-spacing: -0.7px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--primary-gradient);
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+            -webkit-text-fill-color: initial;
+            transition: transform 0.25s ease;
+        }
+
+        .navbar-brand:hover .brand-icon {
+            transform: rotate(-8deg) scale(1.05);
+        }
+
+        /* Icon Badge Wrappers */
+        .icon-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .icon-box-sm {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .icon-box-primary {
+            background: rgba(79, 70, 229, 0.1);
+            color: #4f46e5;
+        }
+
+        .icon-box-fire {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .icon-box-amber {
+            background: rgba(245, 158, 11, 0.12);
+            color: #d97706;
+        }
+
+        .icon-box-emerald {
+            background: rgba(16, 185, 129, 0.12);
+            color: #059669;
+        }
+
+        .icon-box-sky {
+            background: rgba(14, 165, 233, 0.12);
+            color: #0284c7;
+        }
+
+        /* Search bar */
+        .search-container .form-control {
+            border-radius: 50px;
+            padding-left: 2.85rem;
+            background-color: #f1f5f9;
+            border: 1px solid transparent;
+            transition: all 0.25s ease;
+            font-size: 0.925rem;
+        }
+
+        .search-container .form-control:focus {
+            background-color: #ffffff;
+            border-color: #818cf8;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+        }
+
+        .search-container .search-icon {
+            position: absolute;
+            left: 1.15rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #818cf8;
+            pointer-events: none;
+            z-index: 5;
+            font-size: 1.1rem;
+        }
+
+        /* Nav links & Buttons */
+        .nav-link {
+            font-weight: 600;
+            color: #475569 !important;
+            padding: 0.5rem 0.9rem !important;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .nav-link:hover {
+            color: #4f46e5 !important;
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .btn-gradient {
+            background: var(--primary-gradient);
+            color: #ffffff !important;
+            border: none;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-1.5px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35);
+            color: #ffffff !important;
+        }
+
+        /* Cards */
+        .card-post {
+            border: 1px solid rgba(226, 232, 240, 0.85);
+            border-radius: 18px;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card-post:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--card-hover-shadow);
+            border-color: rgba(199, 210, 254, 0.7);
+        }
+
+        .card-post .img-wrapper {
+            position: relative;
+            overflow: hidden;
+            height: 210px;
+            background: #e2e8f0;
+        }
+
+        .card-post .img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card-post:hover .img-wrapper img {
+            transform: scale(1.06);
+        }
+
+        /* Badges */
+        .badge-cat {
+            background: rgba(79, 70, 229, 0.08);
+            color: #4f46e5;
+            font-weight: 700;
+            font-size: 0.75rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .badge-cat:hover {
+            background: #4f46e5;
+            color: #ffffff;
+        }
+
+        .badge-tag {
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-decoration: none;
+            padding: 0.3rem 0.65rem;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin: 2px;
+            transition: all 0.2s ease;
+            border: 1px solid #e2e8f0;
+        }
+
+        .badge-tag:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        /* Modern Filter Pills */
+        .filter-pills {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.25rem;
+        }
+
+        .filter-pills::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .filter-pill {
+            padding: 0.55rem 1.15rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #64748b;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            text-decoration: none;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            transition: all 0.2s ease;
+        }
+
+        .filter-pill i {
+            font-size: 1rem;
+            transition: transform 0.2s ease;
+        }
+
+        .filter-pill:hover {
+            color: #4f46e5;
+            background: #eef2ff;
+            border-color: #c7d2fe;
+        }
+
+        .filter-pill:hover i {
+            transform: scale(1.15);
+        }
+
+        .filter-pill.active {
+            color: #ffffff;
+            background: var(--primary-gradient);
+            border-color: transparent;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.28);
+        }
+
+        /* Sidebar Widgets */
+        .sidebar-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid rgba(226, 232, 240, 0.85);
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-weight: 800;
+            font-size: 1.05rem;
+            letter-spacing: -0.3px;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            color: #0f172a;
+        }
+
+        /* Avatar circle */
+        .avatar-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            color: #4338ca;
+            font-weight: 700;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            box-shadow: 0 2px 6px rgba(79, 70, 229, 0.15);
+        }
+
+        /* Main layout */
+        .main-content {
+            flex: 1;
+            padding-top: 2rem;
+            padding-bottom: 4rem;
+        }
+
+        /* Modern Footer */
+        footer {
+            background-color: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            padding: 3.5rem 0 2rem;
+            margin-top: auto;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Navigatsiya -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top py-2.5">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'blog:home' %}">
+                <span class="brand-icon"><i class="ri-quill-pen-fill"></i></span>
+                <span>BlogSphere</span>
+            </a>
+            
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                <i class="ri-menu-3-line fs-2 text-dark"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <!-- Qidiruv paneli -->
+                <form class="d-flex mx-auto my-3 my-lg-0 col-12 col-lg-5 search-container position-relative" method="GET" action="{% url 'blog:home' %}">
+                    <i class="ri-search-2-line search-icon"></i>
+                    <input class="form-control" type="search" name="q" placeholder="Mavzular, maqolalar yoki mualliflar bo'yicha qidiruv..." value="{{ search_query|default:'' }}">
+                </form>
+
+                <!-- O'ng taraf navigatsiya -->
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'blog:home' %}">
+                            <i class="ri-compass-3-line fs-5 text-primary"></i> Asosiy
+                        </a>
+                    </li>
+                    
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="btn btn-sm btn-gradient rounded-pill px-3.5 py-2" href="{% url 'blog:post_create' %}">
+                                <i class="ri-edit-circle-line fs-5"></i> Post yozish
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item dropdown ms-lg-2">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 p-1 pe-3 rounded-pill bg-light border shadow-sm" href="#" role="button" data-bs-toggle="dropdown">
+                                <div class="avatar-circle">{{ user.username|first }}</div>
+                                <span class="fw-bold small text-dark">{{ user.username }}</span>
+                                {% if pending_posts_count > 0 %}
+                                    <span class="badge bg-warning text-dark rounded-pill">{{ pending_posts_count }}</span>
+                                {% endif %}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2 mt-2">
+                                <li class="px-3 py-2 border-bottom mb-1">
+                                    <span class="d-block text-muted small">Tizimga kirilgan:</span>
+                                    <strong class="text-dark d-flex align-items-center gap-1">
+                                        <i class="ri-user-smile-line text-primary"></i> {{ user.username }}
+                                    </strong>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-2 rounded-3 d-flex align-items-center justify-content-between" href="{% url 'blog:my_posts' %}">
+                                        <span><i class="ri-article-line me-2 text-primary fs-5 align-middle"></i> Mening postlarim</span>
+                                        {% if pending_posts_count > 0 and not user.is_staff %}
+                                            <span class="badge bg-warning text-dark rounded-pill">{{ pending_posts_count }}</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                                {% if user.is_staff %}
+                                <li>
+                                    <a class="dropdown-item py-2 rounded-3 text-danger d-flex align-items-center justify-content-between" href="{% url 'admin:index' %}" target="_blank">
+                                        <span><i class="ri-shield-keyhole-line me-2 fs-5 align-middle"></i> Admin boshqaruv</span>
+                                        {% if pending_posts_count > 0 %}
+                                            <span class="badge bg-danger rounded-pill">{{ pending_posts_count }}</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider my-1"></li>
+                                <li>
+                                    <a class="dropdown-item py-2 rounded-3 text-secondary d-flex align-items-center" href="{% url 'accounts:logout' %}">
+                                        <i class="ri-logout-box-r-line me-2 fs-5 text-muted align-middle"></i> Chiqish
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:login' %}">
+                                <i class="ri-login-circle-line fs-5 text-primary"></i> Kirish
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-sm btn-gradient rounded-pill px-4 py-2" href="{% url 'accounts:register' %}">
+                                <i class="ri-user-add-line"></i> Ro'yxatdan o'tish
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Xabarnomalar (Messages) -->
+    <div class="container mt-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm border-0 rounded-4 px-4 py-3" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="ri-notification-3-fill fs-4 me-2 text-primary"></i>
+                        <div>{{ message }}</div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Asosiy qism -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4 justify-content-between">
+                <div class="col-lg-5 col-md-6">
+                    <a class="navbar-brand mb-2" href="{% url 'blog:home' %}">
+                        <span class="brand-icon"><i class="ri-quill-pen-fill"></i></span>
+                        <span>BlogSphere</span>
+                    </a>
+                    <p class="text-muted mt-2 small" style="max-width: 360px;">
+                        Django freymvorkida yaratilgan, professional va qulay blog platformasi. Fikrlaringiz va maqolalaringizni millionlar bilan baham ko'ring.
+                    </p>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="fw-bold mb-3 text-dark d-flex align-items-center gap-2">
+                        <i class="ri-folder-open-line text-primary"></i> Bo'limlar
+                    </h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2">
+                        {% for cat in global_categories|slice:":4" %}
+                            <li>
+                                <a href="{{ cat.get_absolute_url }}" class="text-decoration-none text-muted d-flex align-items-center gap-1.5">
+                                    <i class="ri-arrow-right-s-line text-primary"></i> {{ cat.name }} ({{ cat.approved_posts_count }})
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <h6 class="fw-bold mb-3 text-dark d-flex align-items-center gap-2">
+                        <i class="ri-shield-check-line text-success"></i> Moderatsiya & Xavfsizlik
+                    </h6>
+                    <p class="text-muted small">
+                        Saytda chop etiladigan barcha yangi maqolalar admin moderatorlari tomonidan tekshirilib, tasdiqlangandan so'ng umumiy sahifada e'lon qilinadi.
+                    </p>
+                    <div class="text-muted small">
+                        © 2026 BlogSphere. Barcha huquqlar himoyalangan.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Yangi Post Yaratish — BlogSphere{% endblock %}
+
+{% block content %}
+<div class="container py-2">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="bg-white p-4 p-md-5 rounded-4 shadow-sm border position-relative overflow-hidden">
+                <div class="position-absolute top-0 start-0 end-0" style="height: 5px; background: var(--primary-gradient);"></div>
+
+                <div class="d-flex align-items-center gap-3 mb-4 pt-2">
+                    <div class="brand-icon" style="width: 48px; height: 48px; font-size: 1.4rem; border-radius: 12px;">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold mb-1 text-dark">Yangi Post Yaratish</h3>
+                        <p class="text-muted small mb-0">Bilim va tajribangizni hamjamiyatimiz bilan ulashing</p>
+                    </div>
+                </div>
+
+                <div class="alert alert-light border rounded-4 mb-4 p-3 d-flex align-items-start gap-3">
+                    <i class="bi bi-shield-check fs-4 text-primary mt-1"></i>
+                    <div>
+                        <strong class="d-block text-dark small">Admin moderatsiyasi haqida:</strong>
+                        <span class="text-muted small">Postlaringiz sifati va xavfsizligini ta'minlash uchun, yangi yozilgan maqolalar avval admin tomonidan ko'rib chiqiladi va tasdiqlangandan so'ng saytda chop etiladi.</span>
+                    </div>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger rounded-4 border-0 small mb-4">
+                            <div class="fw-bold mb-1">Xatoliklarni to'g'rilang:</div>
+                            <ul class="mb-0 ps-3">
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <!-- Sarlavha -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-secondary">
+                            <i class="bi bi-type-h1 me-1 text-primary"></i> Sarlavha (Title) *
+                        </label>
+                        {{ form.title }}
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <!-- Bo'lim -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-secondary">
+                                <i class="bi bi-folder2 me-1 text-primary"></i> Bo'lim (Category) *
+                            </label>
+                            {{ form.category }}
+                        </div>
+
+                        <!-- Rasm -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-secondary">
+                                <i class="bi bi-image me-1 text-primary"></i> Asosiy Rasm (Image) *
+                            </label>
+                            {{ form.image }}
+                        </div>
+                    </div>
+
+                    <!-- Teglar -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-secondary">
+                            <i class="bi bi-tags me-1 text-primary"></i> Mavjud teglardan tanlang:
+                        </label>
+                        {{ form.tags }}
+                        <div class="form-text small">Bir nechta teglarni tanlash uchun <kbd>Ctrl</kbd> tugmasini bosib turing.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-secondary">
+                            <i class="bi bi-plus-circle me-1 text-primary"></i> {{ form.new_tags.label }}
+                        </label>
+                        {{ form.new_tags }}
+                        <div class="form-text small">{{ form.new_tags.help_text }}</div>
+                    </div>
+
+                    <!-- Matni -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-secondary">
+                            <i class="bi bi-file-text me-1 text-primary"></i> Post matni (Content) *
+                        </label>
+                        {{ form.content }}
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <a href="{% url 'blog:home' %}" class="btn btn-light rounded-pill px-4 border">
+                            Bekor qilish
+                        </a>
+                        <button type="submit" class="btn btn-gradient rounded-pill px-5 py-2.5 fw-bold shadow-sm">
+                            <i class="bi bi-send-check me-1"></i> Postni Yuborish
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

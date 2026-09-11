@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Ro'yxatdan O'tish — BlogSphere{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="bg-white p-4 p-sm-5 rounded-4 shadow-sm border position-relative overflow-hidden">
+                <div class="position-absolute top-0 start-0 end-0" style="height: 5px; background: var(--primary-gradient);"></div>
+
+                <div class="text-center mb-4 pt-2">
+                    <div class="brand-icon mx-auto mb-3" style="width: 56px; height: 56px; font-size: 1.75rem; border-radius: 16px;">
+                        <i class="ri-user-add-fill"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark mb-1">Hisob Yaratish</h3>
+                    <p class="text-muted small">Blog hamjamiyatimizga qo'shiling va fikrlaringiz bilan bo'lishing</p>
+                </div>
+
+                {% if form.errors %}
+                    <div class="alert alert-danger rounded-3 border-0 small py-2.5 mb-4">
+                        <div class="fw-bold mb-1 d-flex align-items-center gap-1">
+                            <i class="ri-error-warning-fill"></i> Xatolik yuz berdi:
+                        </div>
+                        <ul class="mb-0 ps-3">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-secondary">
+                            Foydalanuvchi nomi (Login) *
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="ri-user-3-line"></i></span>
+                            {{ form.username }}
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-secondary">Ism</label>
+                            {{ form.first_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-secondary">Familiya</label>
+                            {{ form.last_name }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-secondary">
+                            Elektron pochta *
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="ri-mail-line"></i></span>
+                            {{ form.email }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-secondary">
+                            Parol *
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="ri-lock-line"></i></span>
+                            {{ form.password1 }}
+                        </div>
+                        <div class="form-text small">Kamida 8 ta belgidan iborat bo'lishi lozim.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-secondary">
+                            Parolni tasdiqlang *
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="ri-shield-check-line"></i></span>
+                            {{ form.password2 }}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-gradient w-100 py-2.5 rounded-pill fw-bold shadow-sm justify-content-center">
+                        <i class="ri-user-follow-line"></i> Ro'yxatdan o'tish
+                    </button>
+                </form>
+
+                <div class="text-center mt-4 pt-3 border-top">
+                    <p class="text-muted small mb-0">
+                        Profilingiz bormi?
+                        <a href="{% url 'accounts:login' %}" class="fw-bold text-primary text-decoration-none ms-1">
+                            Kirish
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
