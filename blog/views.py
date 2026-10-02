@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -27,18 +26,12 @@ def home_view(request):
     most_viewed_posts = base_qs.order_by("-views_count")[:5]
 
     # Haftaning eng ommabop postlari (oxirgi 7 kundagi)
-    weekly_popular = base_qs.filter(created_at__gte=week_ago).order_by("-views_count")[:6]
     weekly_qs = base_qs.filter(created_at__gte=week_ago).order_by("-views_count")
-    weekly_popular = weekly_qs[:6]
-    if not weekly_popular.exists():
-        weekly_popular = most_viewed_posts[:6]
+    weekly_popular = weekly_qs[:6] if weekly_qs.exists() else most_viewed_posts[:6]
 
     # Oyning eng ommabop postlari (oxirgi 30 kundagi)
-    monthly_popular = base_qs.filter(created_at__gte=month_ago).order_by("-views_count")[:6]
     monthly_qs = base_qs.filter(created_at__gte=month_ago).order_by("-views_count")
-    monthly_popular = monthly_qs[:6]
-    if not monthly_popular.exists():
-        monthly_popular = most_viewed_posts[:6]
+    monthly_popular = monthly_qs[:6] if monthly_qs.exists() else most_viewed_posts[:6]
 
     # Tab filtrini olish
     tab = request.GET.get("tab", "latest")
@@ -53,11 +46,9 @@ def home_view(request):
         posts_list = base_qs.order_by("-views_count")
         tab_title = "Eng ko'p ko'rilgan postlar"
     elif tab == "weekly":
-        posts_list = weekly_popular
         posts_list = weekly_qs if weekly_qs.exists() else base_qs.order_by("-views_count")
         tab_title = "Haftaning eng ommabop postlari"
     elif tab == "monthly":
-        posts_list = monthly_popular
         posts_list = monthly_qs if monthly_qs.exists() else base_qs.order_by("-views_count")
         tab_title = "Oyning eng ommabop postlari"
     elif tab == "recommended":
